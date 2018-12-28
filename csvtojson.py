@@ -24,7 +24,7 @@ def parseCSV(filen,pkey=None,fields=None,header=False):
             di.update({row[pkey]:temp})
     return di
 
-def convert_csv_json(src=None,des=None,pkey=None,fields=None,header=None):
+def write_csv_json(src=None,des=None,pkey=None,fields=None,header=None):
     if src and pkey:
         r = parseCSV(src,pkey=pkey,fields=fields,header=header)
         if r:
@@ -39,9 +39,9 @@ def convert_csv_json(src=None,des=None,pkey=None,fields=None,header=None):
 
 def main():
     aparser = ArgumentParser()
-    aparser.add_argument('-s','--source',help="csv source file path.",dest="src")
+    aparser.add_argument('-s','--source',help="csv source file path.",dest="src",required=True)
     aparser.add_argument('-d','--destination',help="json destination file path.",dest="des")
-    aparser.add_argument('-k','--key',help="the primary key. This has to be present in the heading/fields.",dest="pkey")
+    aparser.add_argument('-k','--key',help="the primary key. This has to be present in the heading/fields.",dest="pkey",required=True)
     aparser.add_argument('-f','--fields',help="csv fields, comma seperated. This has to be used in case field is not in the CSV file.",dest="fields")
     aparser.add_argument('--header',help="True if header/fields are present in CSV file. Default is False.",dest="header")
 
@@ -61,7 +61,7 @@ def main():
         else:
             header = False
 
-    convert_csv_json(src=src,des=des,pkey=pkey,fields=fields,header=header)
+    write_csv_json(src=src,des=des,pkey=pkey,fields=fields,header=header)
 
 if __name__=="__main__":
     main()
