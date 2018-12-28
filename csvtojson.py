@@ -1,10 +1,13 @@
+#!/usr/local/bin/python
 import csv
 import json
+import sys
+from argparse import ArgumentParser
+
 def parseCSV(filen,pkey=None,fields=None,header=False):
     with open(filen,"r") as f:
         if header:
             fields = tuple(f.readline().strip().split(","))
-            print fields
         reader = csv.DictReader(f,fieldnames=fields);
         di = {}
         if pkey not in fields:
@@ -13,7 +16,6 @@ def parseCSV(filen,pkey=None,fields=None,header=False):
 
         for row in reader:
             temp = {}
-            print row
             for i in fields:
                 if i == pkey:
                     continue
@@ -22,11 +24,44 @@ def parseCSV(filen,pkey=None,fields=None,header=False):
             di.update({row[pkey]:temp})
     return di
 
+def convert_csv_json(src=None,des=None,pkey=None,fields=None,header=None):
+    if src and pkey:
+        r = parseCSV(src,pkey=pkey,fields=fields,header=header)
+        if r:
+            r = json.dumps([r])
+            if not des:
+                des = src.split(".")[0]+".json"
+            with open(des,"w") as f:
+                f.write(r)
+    else:
+        print "The src file and primary key is required!"
+        return None
+
 def main():
-    r = parseCSV("./f1.csv",pkey='k2',header=True)
-    r = json.dumps([r])
-    with open("./parsedCSV.json","w") as f:
-        f.write(r)
+    aparser = ArgumentParser()
+    aparser.add_argument('-s','--source',help="csv source file path.",dest="src")
+    aparser.add_argument('-d','--destination',help="json destination file path.",dest="des")
+    aparser.add_argument('-k','--key',help="the primary key. This has to be present in the heading/fields.",dest="pkey")
+    aparser.add_argument('-f','--fields',help="csv fields, comma seperated. This has to be used in case field is not in the CSV file.",dest="fields")
+    aparser.add_argument('--header',help="True if header/fields are present in CSV file. Default is False.",dest="header")
+
+    args = aparser.parse_args()
+
+    src = args.src
+    des = args.des
+    pkey = args.pkey
+    fields = args.fields
+    if fields:
+        fields = tuple(fields.split(","))
+    header = args.header
+    if header:
+        header = header.lower()
+        if 't' in header:
+            header = True
+        else:
+            header = False
+
+    convert_csv_json(src=src,des=des,pkey=pkey,fields=fields,header=header)
 
 if __name__=="__main__":
     main()
