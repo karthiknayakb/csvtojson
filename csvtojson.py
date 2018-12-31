@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 import csv
 import json
 import sys
@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 def parseCSV(filen,pkey=None,fields=None,header=False):
     with open(filen,"r") as f:
         if header:
-            fields = tuple(f.readline().strip().split(","))
+            fields = tuple(f.readline().strip().split(","));
         reader = csv.DictReader(f,fieldnames=fields);
         di = {}
         if pkey not in fields:
@@ -34,7 +34,7 @@ def write_csv_json(src=None,des=None,pkey=None,fields=None,header=None):
             with open(des,"w") as f:
                 f.write(r)
     else:
-        print "The src file and primary key is required!"
+        print ("The src file and primary key is required!")
         return None
 
 def main():
