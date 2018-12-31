@@ -35,3 +35,7 @@ csvtojson.py [-h] -s SRC [-d DES] -k PKEY [-f FIELDS] [--header HEADER]
 --header HEADER       True if header/fields are present in CSV file. Default
                       is False.
 ```
+
+## Misc
+
+The csvtojson_u.py uses ujson library. This should improve the speed 4 times the default json.
