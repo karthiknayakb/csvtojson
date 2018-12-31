@@ -34,7 +34,7 @@ def write_csv_json(src=None,des=None,pkey=None,fields=None,header=None):
             with open(des,"w") as f:
                 f.write(r)
     else:
-        print ("The src file and primary key is required!")
+        print ("The src file and primary key is required!");
         return None
 
 def main():
