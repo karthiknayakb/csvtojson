@@ -24,9 +24,32 @@ def parseCSV(filen,pkey=None,fields=None,header=False):
             di.update({row[pkey]:temp})
     return di
 
+def parseCSV2(filen,pkey=None,fields=None,header=False):
+    with open(filen,"r") as f:
+        if header:
+            fields = tuple(f.readline().strip().split(","));
+        reader = f.readline;
+        di = {}
+        if pkey not in fields:
+            print("Key has to be in the header/fields.")
+            return None;
+
+        for row in reader:
+            temp = {}
+            row = row.strip()
+            row = row.split(",")
+            row = dict(zip(fields,row))
+            for i in fields:
+                if i == pkey:
+                    continue
+                else:
+                    temp[i]=row[i]
+            di.update({row[pkey]:temp})
+    return di
+
 def write_csv_json(src=None,des=None,pkey=None,fields=None,header=None):
     if src and pkey:
-        r = parseCSV(src,pkey=pkey,fields=fields,header=header)
+        r = parseCSV2(src,pkey=pkey,fields=fields,header=header)
         if r:
             r = json.dumps([r])
             if not des:
